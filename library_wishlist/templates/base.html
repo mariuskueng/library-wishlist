@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Twitter Archive</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap -->
+        <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="{{STATIC_URL}}css/all.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <div class="navbar navbar-static-top">
+          <div class="navbar-inner">
+            <div class="container-fluid">
+
+              <!-- Be sure to leave the brand out there if you want it shown -->
+              <a class="brand" href="/">Library Wishlist</a>
+
+              <!-- Everything you want hidden at 940px or less, place within here -->
+              {% comment %}
+              <div class="nav-collapse collapse">
+                <ul class="nav">
+                  <li class="active">
+                    <a href="#">Home</a>
+                  </li>
+                  <li><a href="#">About</a></li>
+                </ul>
+              </div>
+              {% endcomment %}
+
+            </div>
+          </div>
+        </div>
+        <div class="container">
+            <div class="row-fluid">
+                <div class="span10 content">
+                    <form>
+                        <input id="submit">
+                    </form>
+                    {% block content %}
+                        <div class="hero-unit">
+                          <h1>Twitter Archive</h1>
+                          <p><br>Your favorited Tweets with tags!</p>
+                          <p>Start by clicking on a tag category in the nav.</p>
+                        </div>
+                    {% endblock content %}
+                </div>
+            </div>
+        </div>
+
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>
