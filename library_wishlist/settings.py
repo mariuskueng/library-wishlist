@@ -100,7 +100,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'library_wishlist.urls'
@@ -122,8 +122,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'library_wishlist',
-    'tastypie',
     'django.contrib.admin',
+    'south',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -161,9 +161,8 @@ BRANCHES = (
     (0, 'Zentrum'),
     (1, 'Basel West'),
     (2, 'Bläsi'),
-    (3, 'Breite'),
+    (2, 'Kirschgarten'),
     (4, 'Gundeldingen'),
-    (5, 'Hirzbrunnen')
 )
 
 STATES = (

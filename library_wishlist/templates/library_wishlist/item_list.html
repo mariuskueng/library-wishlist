@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-    {{object_list}}
+<div class="col-xs-12 wishlist panel-group" id="wishlist">
+    <div class="row titles">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-4">Titel</div>
+        <div class="col-xs-4">Autor</div>
+        <div class="col-xs-2">Verfügbar</div>
+    </div>
+    {% for i in items %}
+        {% include "library_wishlist/item.html" %}
+        {% empty %}
+            <div class="row items">
+                <div class="col-xs-4 col-md-offset-4">Keine Medien in dieser Zweigstelle.</div>
+            </div>
+    {% endfor %}
+</div>
 {% endblock content %}
 

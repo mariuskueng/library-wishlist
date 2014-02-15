@@ -1,0 +1,36 @@
+<div id="item-{{ i.id }}" class="row items bg-{% if i.status %}success {% else %}danger{% endif %}" data-id="{{ i.id }}">
+    <div class="col-xs-1">
+        <button type="button" class="btn btn-default btn-sm wishlist-completed" data-id="{{ i.id }}">
+          <span class="glyphicon glyphicon-ok"></span>
+        </button>
+    </div>
+    {% if not i.name %}
+        <div class="col-xs-4 wishlist-text">{{ i.text }}</div>
+        <div class="col-xs-4"></div>
+    {% else %}
+        <div class="col-xs-4 wishlist-name">{{ i.name }}</div>
+        <div class="col-xs-4 wishlist-author">{{ i.author }}</div>
+    {% endif %}
+    <div class="col-xs-2">
+        <a class="btn btn-default btn-sm wishlist-dropdown" data-toggle="collapse" data-parent="#wishlist" href="#copy-{{ forloop.counter }}">
+            <span class="glyphicon glyphicon-chevron-down"></span>
+        </a>
+    </div>
+    <div class="col-xs-12 panel-collapse collapse copies" id="copy-{{ forloop.counter }}">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+                {% if i.image %}
+                    <img src="{{ i.image }}">
+                {% endif %}
+            </div>
+            <div class="col-xs-8">
+            {% for c in i.copies.all %}
+                <div class="row copies-info">
+                    <div class="col-xs-4 col-md-offset-3">{{c.branch}} <span class="wishlist-location">{{c.location}}</span></div>
+                    <div class="col-xs-1 col-md-offset-2"><button type="button" class="btn btn-{% if c.status %}success {% else %}danger{% endif %}">&nbsp;</button></div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

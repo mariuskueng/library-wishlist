@@ -1,53 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Twitter Archive</title>
+        <title>Library Wishlist</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content"noindex, nofollow">
         <!-- Bootstrap -->
         <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="{{STATIC_URL}}css/all.css" rel="stylesheet" media="screen">
+        <script type="text/javascript">
+          var csrf = '{{csrf_token}}';
+        </script>
     </head>
     <body>
-        <div class="navbar navbar-static-top">
-          <div class="navbar-inner">
-            <div class="container-fluid">
-
-              <!-- Be sure to leave the brand out there if you want it shown -->
-              <a class="brand" href="/">Library Wishlist</a>
-
-              <!-- Everything you want hidden at 940px or less, place within here -->
-              {% comment %}
-              <div class="nav-collapse collapse">
-                <ul class="nav">
-                  <li class="active">
-                    <a href="#">Home</a>
-                  </li>
-                  <li><a href="#">About</a></li>
-                </ul>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Library Wishlist</a>
               </div>
-              {% endcomment %}
-
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% if currentBranch %}{{ currentBranch }}{% else %}Zweigstellen{% endif %} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="/">Alle</a></li>
+                      {% for b in branches %}
+                        <li><a href="/branches/{{ b.slug }}" class=""> {{ b.name }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                </ul>
+              </div><!-- /.navbar-collapse -->
             </div>
-          </div>
-        </div>
+        </nav>
+
         <div class="container">
-            <div class="row-fluid">
-                <div class="span10 content">
-                    <form>
-                        <input id="submit">
+            <div class="col-xs-12">
+                <div class="row">
+                    <form id="create-form" role="form" action="" method="post" class="form-inline">{% csrf_token %}
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="id_text" name="text" placeholder="Titel hier eingeben">
+                        <button type="submit" class="btn btn-default wishlist-submit">Hinzufügen</button>
+                      </div>
                     </form>
-                    {% block content %}
-                        <div class="hero-unit">
-                          <h1>Twitter Archive</h1>
-                          <p><br>Your favorited Tweets with tags!</p>
-                          <p>Start by clicking on a tag category in the nav.</p>
-                        </div>
-                    {% endblock content %}
+                </div>
+                <div class="row">
+                    {% block content %}{% endblock content %}
                 </div>
             </div>
         </div>
-
-        <script src="http://code.jquery.com/jquery.js"></script>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="{{STATIC_URL}}js/jquery-2.1.0.min.js"></script>
+        <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
+        <script src="{{STATIC_URL}}js/main.js"></script>
     </body>
 </html>
