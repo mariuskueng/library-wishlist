@@ -6,8 +6,6 @@ from django.db.models import Q
 
 from parser import search_catalog
 from library_wishlist.models import Item, Branch
-from library_wishlist.forms import ItemForm
-
 
 class IndexView(TemplateView):
     template_name = "library_wishlist/item_list.html"

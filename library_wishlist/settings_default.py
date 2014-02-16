@@ -1,4 +1,4 @@
-# Django settings for mariuskueng_website project.
+# Django settings for library_wishlist project.
 import os
 PROJECT_DIR = os.path.dirname(__file__)
 
@@ -76,7 +76,6 @@ SECRET_KEY = 'agzhy8uu34fg=*(pa^#8vwdc^&*6*pq*#*9qmp0zgp6h%15a^b'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    'django_mobile.loader.Loader',
 #     'django.template.loaders.eggs.Loader',
 )
 
@@ -87,8 +86,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_mobile.middleware.MobileDetectionMiddleware',
-    'django_mobile.middleware.SetFlavourMiddleware',
 )
 
 ROOT_URLCONF = 'library_wishlist.urls'
@@ -104,7 +101,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
-    'django_mobile.context_processors.flavour',
 )
 
 TEMPLATE_DIRS = (
@@ -155,5 +151,3 @@ LOGGING = {
 
 # fix the django.fcgi url problem
 FORCE_SCRIPT_NAME = ""
-
-# Compressor settings
