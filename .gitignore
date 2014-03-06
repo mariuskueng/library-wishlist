@@ -7,3 +7,4 @@
 *.sqlite
 *.mo
 *settings.py
+*settings_production.py
