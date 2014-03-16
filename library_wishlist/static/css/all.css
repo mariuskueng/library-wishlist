@@ -29,6 +29,9 @@
     color: #777;
     font-style: italic;
 }
+.opening-hours {
+    list-style: none;
+}
 
 @media(max-width:767px){
 
@@ -39,12 +42,11 @@
     }
     .wishlist-submit {
         width: 28%;
+        font-size: 11px;
+        height: 34px;
     }
     .wishlist-name, .items-head-title{
         padding-left: 30px;
-    }
-    .wishlist-dropdown-container {
-        float: right;
     }
     .copies img {
         display: block;
@@ -63,16 +65,6 @@
     .copies-info .col-xs-4 {
         margin-left: -15px;
         width: 50%;
-    }
-
-    .copies-info .col-xs-1 {
-        margin-left: 15px;
-        padding-right: 0;
-        float: right;
-        width: 50%;
-    }
-    .copies-info .btn {
-        float: right;
     }
 
 }
