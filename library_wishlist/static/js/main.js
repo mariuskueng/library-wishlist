@@ -9,6 +9,13 @@ $('.wishlist-dropdown').on('click', function(e){
         .toggleClass('glyphicon-chevron-down')
         .toggleClass('glyphicon-chevron-up')
 });
+$('.wishlist-collapse-all').on('click', function(e){
+    e.preventDefault();
+    $('.copies').collapse('show');
+    $('.wishlist-dropdown').find('.glyphicon')
+        .toggleClass('glyphicon-chevron-down')
+        .toggleClass('glyphicon-chevron-up')
+});
 
 $("#create-form").submit(function(){
     var textField = $('#id_text');

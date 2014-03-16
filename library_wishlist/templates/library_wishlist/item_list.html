@@ -3,9 +3,9 @@
 <div class="col-xs-12 wishlist panel-group" id="wishlist">
     <div class="row titles">
         <div class="col-xs-1"></div>
-        <div class="col-xs-4">Titel</div>
-        <div class="col-xs-4">Autor</div>
-        <div class="col-xs-2">Verfügbar</div>
+        <div class="col-xs-4 items-head-title">Titel</div>
+        <div class="col-xs-4 items-head-author">Autor</div>
+        <div class="col-xs-2 items-head-status">Verfügbar</div>
     </div>
     {% for i in items %}
         {% include "library_wishlist/item.html" %}

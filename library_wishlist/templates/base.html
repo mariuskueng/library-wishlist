@@ -27,15 +27,11 @@
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                  <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% if currentBranch %}{{ currentBranch }}{% else %}Zweigstellen{% endif %} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                      <li><a href="/">Alle</a></li>
+                  <li><a href="#" class="wishlist-collapse-all">Zeige alle</a></li>
+                  <li><a href="/">Alle</a></li>
                       {% for b in branches %}
                         <li><a href="/branches/{{ b.slug }}" class=""> {{ b.name }}</a></li>
                       {% endfor %}
-                    </ul>
-                  </li>
                   <li><a href="#">{% if currentBranch %}{{ currentBranch.opening_hours }}{% endif %}</a></li>
                 </ul>
               </div><!-- /.navbar-collapse -->
