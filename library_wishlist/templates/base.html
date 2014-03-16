@@ -30,9 +30,18 @@
                   <li><a href="#" class="wishlist-collapse-all">Zeige alle</a></li>
                   <li><a href="/">Alle</a></li>
                       {% for b in branches %}
-                        <li><a href="/branches/{{ b.slug }}" class=""> {{ b.name }}</a></li>
+                        <li>
+                            <a href="/branches/{{ b.slug }}">{{ b.name }}</a>
+                            {% if currentBranch.name  == b.name %}
+                            <ul class="opening-hours">
+                                <li>
+                                    {{ currentBranch.opening_hours }}
+                                </li>
+                            </ul>
+                            {% endif %}
+                        </li>
                       {% endfor %}
-                  <li><a href="#">{% if currentBranch %}{{ currentBranch.opening_hours }}{% endif %}</a></li>
+
                 </ul>
               </div><!-- /.navbar-collapse -->
             </div>
