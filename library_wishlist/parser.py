@@ -25,7 +25,7 @@ def search_catalog(value):
     url = '%s/InfoGuideClient.sisis/start.do?Login=opextern&Language=de&SearchType=2&Query=-1%s' % (base_URL, value)
     br = mechanize.Browser()
     response = br.open(url)
-    parse_query(response, br)
+    return parse_query(response, br)
 
 
 def getMultipleSearchResults(soup, browser):
@@ -124,8 +124,10 @@ def parse_query(query, browser):
         for r in results:
             r['copies'].append(setItem(r["content"]))
 
+        return results
+
     else:
-        setItem(soup)
+        return setItem(soup)
 
 
 # search_catalog("Arbeit und Struktur")

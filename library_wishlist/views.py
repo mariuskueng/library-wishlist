@@ -33,13 +33,14 @@ class BranchView(TemplateView):
 def createItem(request):
     if request.POST:
         text = text=request.POST['text']
-        copies = search_catalog(text)
-        if copies:
+        searchItem = search_catalog(text)
+
+        if searchItem:
             item = Item(
                 text=text
             )
             item.save()
-            item.createCopies(copies)
+            item.createCopies(searchItem)
             respone = render_to_string('library_wishlist/item.html', {'i': item})
             return HttpResponse(respone, content_type="text/html")
         else:
