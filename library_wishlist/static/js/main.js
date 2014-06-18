@@ -22,13 +22,18 @@ $("#create-form").submit(function(){
         csrfmiddlewaretoken: csrf
      },
     function(data,status){
-      // console.log("Data: " + data + "\nStatus: " + status);
-      $('.items').first().before(data);
+        if (typeof data === "object") {
+            for (var i=0; i < data.length; i++) {
+                    $(".suggestions").append("<p><a href='#' data-index='"+i+"'>"+data[i].name+"</a></p>");
+            }
+        } else {
+            $('.items').first().before(data);
+        }
 
-      $('.wishlist-completed').on('click', function(e){
+        $('.wishlist-completed').on('click', function(e){
           completeItem($('.items').first());
-      });
-      resetItemForm();
+        });
+        resetItemForm();
 
     })
     .fail(function(xhr) {
@@ -109,5 +114,3 @@ $.ajaxSetup({
         }
     }
 });
-
-

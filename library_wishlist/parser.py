@@ -123,6 +123,7 @@ def parse_query(query, browser):
 
         for r in results:
             r['copies'].append(setItem(r["content"]))
+            r['content'] = str(r['content'])
 
         return results
 

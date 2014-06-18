@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView
 from django.template.loader import render_to_string
 from django.http import HttpResponse, Http404
 from django.db.models import Q
+import json
 
 from parser import search_catalog
 from library_wishlist.models import Item, Branch
@@ -36,13 +37,20 @@ def createItem(request):
         searchItem = search_catalog(text)
 
         if searchItem:
-            item = Item(
-                text=text
-            )
-            item.save()
-            item.createCopies(searchItem)
-            respone = render_to_string('library_wishlist/item.html', {'i': item})
-            return HttpResponse(respone, content_type="text/html")
+            if isinstance(searchItem, list):
+                #  render -> dropdown
+                # chosen one new Item, item.createCopies...
+
+                # print searchItem
+                return HttpResponse(json.dumps(searchItem), content_type="application/json")
+            else:
+                item = Item(
+                    text=text
+                )
+                item.save()
+                item.createCopies(searchItem)
+                respone = render_to_string('library_wishlist/item.html', {'i': item})
+                return HttpResponse(respone, content_type="text/html")
         else:
             raise Http404
     else:
