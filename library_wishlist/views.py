@@ -57,6 +57,28 @@ def createItem(request):
         raise Http404
 
 
+def createSearchResultItem(request):
+    if request.POST:
+        searchItem = {
+            "name": request.POST.get('text'),
+            "copies": request.POST.get('copies'),
+            "author": request.POST.get('author'),
+            "status": False,
+            "image": ""
+        }
+
+        item = Item(
+            text=searchItem["name"]
+        )
+        item.save()
+        item.createCopies(searchItem)
+
+        respone = render_to_string('library_wishlist/item.html', {'i': item})
+        return HttpResponse(respone, content_type="text/html")
+    else:
+        raise Http404
+
+
 def completeItem(request, **kwargs):
     item = Item.objects.get(id=kwargs['id'])
     if request.POST:

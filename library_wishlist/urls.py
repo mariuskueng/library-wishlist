@@ -6,13 +6,14 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-from library_wishlist.views import IndexView, BranchView, createItem, completeItem
+from library_wishlist.views import IndexView, BranchView, createItem, completeItem, createSearchResultItem
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^branches/(?P<slug>[-\w]+)/$',  BranchView.as_view(), name="branch_view"),
     url(r'^item/$', createItem, name='new_item'),
+    url(r'^itemSearchResult/$', createSearchResultItem, name='new_item'),
     url(r'^item/(?P<id>[0-9]+)/', completeItem, name='edit_item'),
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
