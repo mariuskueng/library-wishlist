@@ -47,13 +47,11 @@
                 <div class="row">
                     <form id="create-form" role="form" action="" method="post" class="form-inline">{% csrf_token %}
                       <div class="form-group">
-                        <input type="text" class="form-control" id="id_text" name="text" placeholder="Titel hier eingeben" value="Arbeit und Struktur">
+                        <input type="text" class="form-control" id="id_text" name="text" placeholder="Titel hier eingeben">
                         <button type="submit" class="btn btn-default wishlist-submit">Hinzufügen</button>
                       </div>
                     </form>
-                    <div class="suggestions">
-                        <p><strong>Es wurden mehrere Suchergebnisse gefunden. Bitte korrektes auswählen</strong></p>
-                    </div>
+                    <div class="suggestions"></div>
                 </div>
                 <div class="row">
                     {% block content %}{% endblock content %}

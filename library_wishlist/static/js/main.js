@@ -25,11 +25,7 @@ $("#create-form").submit(function() {
         },
         function(data, status) {
             if (typeof data === "object") {
-                for (var i = 0; i < data.length; i++) {
-                    $(".suggestions").append("<p><a href='#' data-index='" + i + "'>" + data[i].name + "</a></p>");
-                    searchResults.push(data[i]);
-                }
-                initSuggestions();
+                initSuggestions(data);
             } else {
                 $('.items').first().before(data);
             }
@@ -63,7 +59,12 @@ function resetItemForm() {
     });
 }
 
-function initSuggestions() {
+function initSuggestions(data) {
+    $(".suggestions").append("<p><strong>Es wurden mehrere Suchergebnisse gefunden. Bitte das Gewünschte auswählen.</strong></p>");
+    for (var i = 0; i < data.length; i++) {
+        $(".suggestions").append("<p><a href='#' data-index='" + i + "'>" + data[i].name + "</a></p>");
+        searchResults.push(data[i]);
+    }
     $(".suggestions a").on("click", function(e) {
         e.preventDefault();
         var index = parseInt($(this).attr("data-index"));

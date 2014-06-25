@@ -57,6 +57,9 @@ def getMultipleSearchResults(soup, browser):
 
 
 def setItem(soup):
+    if len(soup.select('.left')) == 0: # if item is not available in library return
+        return None
+
     copies_tags = soup.select('#tab-content tr')
     del copies_tags[0]
 
@@ -77,12 +80,15 @@ def setItem(soup):
     }
 
     for copy in copies_tags:
+        if len(copy.select('td')) == 0: # if table row is no copy i.e "Neuerscheinungen"
+            break
+
         branch = getLibrary(str(copy.select('td')[3].contents))
         status = copy.select('td')[4].string
         location = BeautifulSoup(str(copy.select('td')[2])).get_text().strip()
 
         if not branch:
-            continue
+            break
 
         if 'frei' in status:
             status = True
