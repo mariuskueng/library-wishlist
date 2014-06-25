@@ -2,6 +2,12 @@ import re
 import urllib2
 import urllib
 from bs4 import BeautifulSoup
+import mechanize
+
+base_URL = 'http://stadtbibliothekbasel.ch:8080'
+
+# TODO: check if django is around,
+# if yes use db models
 
 libraries = [
     'Zentrum',
@@ -11,27 +17,48 @@ libraries = [
     'Basel West',
 ]
 
-def get_query_response(value):
-    value = re.compile('\W+').sub(' ', value).strip()
-    query = {'': '"%s"' % value}
-    value = urllib.urlencode(query)
-    url = 'http://stadtbibliothekbasel.ch:8080/InfoGuideClient.sisis/start.do?Login=opextern&Language=de&SearchType=2&Query=-1%s' % value
-    response = urllib2.urlopen(url).read()
-    return BeautifulSoup(response)
-
-
-def getLibrary(branch):
-    for l in libraries:
-        if l in branch:
-            return l
-
 
 def search_catalog(value):
-    soup = get_query_response(value)
+    value = value.encode("utf-8")
+    re.compile('\W+', re.UNICODE).sub(' ', value).strip()
+    query = {'': '"%s"' % value}
+    value = urllib.urlencode(query)
+    url = '%s/InfoGuideClient.sisis/start.do?Login=opextern&Language=de&SearchType=2&Query=-1%s' % (base_URL, value)
+    br = mechanize.Browser()
+    response = br.open(url)
+    return parse_query(response, br)
 
-    if (soup.select('#hitlist')): # if an artists list gets returned by query
-        # TODO: return hitlist as recommandations to select
-        return
+
+def getMultipleSearchResults(soup, browser):
+    # searchresults
+    results = []
+
+    # iterate through search results
+    for i, r in enumerate(soup.select('.data .t1')):
+
+        link = soup.select('.data .t1')[i]
+        url = base_URL + link['href']
+
+        # open detail view of search result
+        detailContent = browser.open(url)
+        html = detailContent.read()
+        detailContent = BeautifulSoup(html)
+
+        # append each search results
+        results.append({
+            'name': link.string.strip(),
+            'url': url,
+            'content': detailContent,
+            'index': i,
+            'copies': []
+        })
+
+    return results
+
+
+def setItem(soup):
+    if len(soup.select('.left')) == 0: # if item is not available in library return
+        return None
 
     copies_tags = soup.select('#tab-content tr')
     del copies_tags[0]
@@ -53,12 +80,15 @@ def search_catalog(value):
     }
 
     for copy in copies_tags:
+        if len(copy.select('td')) == 0: # if table row is no copy i.e "Neuerscheinungen"
+            break
+
         branch = getLibrary(str(copy.select('td')[3].contents))
         status = copy.select('td')[4].string
         location = BeautifulSoup(str(copy.select('td')[2])).get_text().strip()
 
         if not branch:
-            continue
+            break
 
         if 'frei' in status:
             status = True
@@ -81,6 +111,28 @@ def search_catalog(value):
 
     return item
 
-search_catalog('Black Keys Brothers')
-# print search_catalog('Black Keys Brothers')
-# print search_catalog('White lies big tv')
+
+def getLibrary(branch):
+    for l in libraries:
+        if l in branch:
+            return l
+
+
+def getStatus(statusString):
+    pass
+
+
+def parse_query(query, browser):
+    soup = BeautifulSoup(query.read())
+
+    if (soup.select('#hitlist')): # if an artists list gets returned by query
+        results = getMultipleSearchResults(soup, browser)
+
+        for r in results:
+            r['item'] = setItem(r["content"])
+            r['content'] = ""
+
+        return results
+
+    else:
+        return setItem(soup)

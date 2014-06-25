@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView
 from django.template.loader import render_to_string
 from django.http import HttpResponse, Http404
 from django.db.models import Q
+import json
 
 from parser import search_catalog
 from library_wishlist.models import Item, Branch
@@ -33,15 +34,40 @@ class BranchView(TemplateView):
 def createItem(request):
     if request.POST:
         text = text=request.POST['text']
-        copies = search_catalog(text)
-        if copies:
+        searchItem = search_catalog(text)
+        if searchItem:
+            if isinstance(searchItem, list):
+                return HttpResponse(json.dumps(searchItem), content_type="application/json")
+            else:
+                item = Item(
+                    text=text
+                )
+                item.save()
+                item.createCopies(searchItem)
+
+                response = render_to_string('library_wishlist/item.html', {'i': item})
+                return HttpResponse(response, content_type="text/html")
+        else:
+            raise Http404
+    else:
+        raise Http404
+
+
+def createSearchResultItem(request):
+    if request.is_ajax:
+        if request.method == "POST":
+
+            json_str = request.body.decode(encoding='UTF-8')
+            searchItem = json.loads(json_str)
+
             item = Item(
-                text=text
+                text=searchItem["name"]
             )
             item.save()
-            item.createCopies(copies)
-            respone = render_to_string('library_wishlist/item.html', {'i': item})
-            return HttpResponse(respone, content_type="text/html")
+            item.createCopies(searchItem)
+
+            response = render_to_string('library_wishlist/item.html', {'i': item})
+            return HttpResponse(response, content_type="text/html")
         else:
             raise Http404
     else:
