@@ -35,13 +35,8 @@ def createItem(request):
     if request.POST:
         text = text=request.POST['text']
         searchItem = search_catalog(text)
-
         if searchItem:
             if isinstance(searchItem, list):
-                #  render -> dropdown
-                # chosen one new Item, item.createCopies...
-
-                # print searchItem
                 return HttpResponse(json.dumps(searchItem), content_type="application/json")
             else:
                 item = Item(
@@ -49,8 +44,9 @@ def createItem(request):
                 )
                 item.save()
                 item.createCopies(searchItem)
-                respone = render_to_string('library_wishlist/item.html', {'i': item})
-                return HttpResponse(respone, content_type="text/html")
+
+                response = render_to_string('library_wishlist/item.html', {'i': item})
+                return HttpResponse(response, content_type="text/html")
         else:
             raise Http404
     else:
@@ -58,23 +54,22 @@ def createItem(request):
 
 
 def createSearchResultItem(request):
-    if request.POST:
-        searchItem = {
-            "name": request.POST.get('text'),
-            "copies": request.POST.get('copies'),
-            "author": request.POST.get('author'),
-            "status": False,
-            "image": ""
-        }
+    if request.is_ajax:
+        if request.method == "POST":
 
-        item = Item(
-            text=searchItem["name"]
-        )
-        item.save()
-        item.createCopies(searchItem)
+            json_str = request.body.decode(encoding='UTF-8')
+            searchItem = json.loads(json_str)
 
-        respone = render_to_string('library_wishlist/item.html', {'i': item})
-        return HttpResponse(respone, content_type="text/html")
+            item = Item(
+                text=searchItem["name"]
+            )
+            item.save()
+            item.createCopies(searchItem)
+
+            response = render_to_string('library_wishlist/item.html', {'i': item})
+            return HttpResponse(response, content_type="text/html")
+        else:
+            raise Http404
     else:
         raise Http404
 

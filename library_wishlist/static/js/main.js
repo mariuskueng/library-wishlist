@@ -67,22 +67,23 @@ function initSuggestions() {
     $(".suggestions a").on("click", function(e) {
         e.preventDefault();
         var index = parseInt($(this).attr("data-index"));
-        var item = searchResults[index];
+        var item = JSON.stringify(searchResults[index].item);
 
-        $.post("/itemSearchResult/", {
-                text: item.name,
-                copies: item.copies,
-                author: item.author,
-                csrfmiddlewaretoken: csrf
-            },
-            function(data, status) {
+        $.ajax({
+            type: "POST",
+            url: "/itemSearchResult/",
+            contentType: "application/json",
+            data: item,
+            dataType: "html",
+            success: function(data, status) {
                 $('.items').first().before(data);
                 resetItemForm();
-            })
-            .fail(function(xhr) {
+            },
+            error: function(xhr, status) {
                 console.log("Error: " + xhr.statusText);
                 resetItemForm();
-            })
+            }
+        });
         return false;
 
     });

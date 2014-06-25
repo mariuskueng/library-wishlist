@@ -122,18 +122,10 @@ def parse_query(query, browser):
         results = getMultipleSearchResults(soup, browser)
 
         for r in results:
-            r['copies'].append(setItem(r["content"]))
-            r['content'] = str(r['content'])
+            r['item'] = setItem(r["content"])
+            r['content'] = ""
 
         return results
 
     else:
         return setItem(soup)
-
-
-# search_catalog("Arbeit und Struktur")
-# get_query_response('Black Keys Brothers')
-
-# search_catalog('Arbeit und Struktur')
-# print search_catalog('Black Keys Brothers')
-# print search_catalog('White lies big tv')
