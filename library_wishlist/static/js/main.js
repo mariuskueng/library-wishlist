@@ -60,7 +60,7 @@ function resetItemForm() {
 }
 
 function initSuggestions(data) {
-    $(".suggestions").append("<p><strong>Es wurden mehrere Suchergebnisse gefunden. Bitte das Gewünschte auswählen.</strong></p>");
+    $(".suggestions").empty().append("<p><strong>Es wurden mehrere Suchergebnisse gefunden. Bitte das Gewünschte auswählen.</strong></p>");
     for (var i = 0; i < data.length; i++) {
         $(".suggestions").append("<p><a href='#' data-index='" + i + "'>" + data[i].name + "</a></p>");
         searchResults.push(data[i]);
@@ -79,6 +79,7 @@ function initSuggestions(data) {
             success: function(data, status) {
                 $('.items').first().before(data);
                 resetItemForm();
+                $(".suggestions").empty();
             },
             error: function(xhr, status) {
                 console.log("Error: " + xhr.statusText);
