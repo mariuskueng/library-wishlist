@@ -19,7 +19,8 @@ libraries = [
 
 
 def search_catalog(value):
-    value = re.compile('\W+').sub(' ', value).strip()
+    value = value.encode("utf-8")
+    re.compile('\W+', re.UNICODE).sub(' ', value).strip()
     query = {'': '"%s"' % value}
     value = urllib.urlencode(query)
     url = '%s/InfoGuideClient.sisis/start.do?Login=opextern&Language=de&SearchType=2&Query=-1%s' % (base_URL, value)
