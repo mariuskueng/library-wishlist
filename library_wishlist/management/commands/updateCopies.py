@@ -11,9 +11,6 @@ class Command(BaseCommand):
 
             for i in items:
                 i.updateCopies()
-                self.stdout.write('Successfully updated item %s' % i)
 
         except Item.DoesNotExist:
-            raise CommandError('There are no items available.')
-
-        self.stdout.write('Successfully updated all items.')
+            pass

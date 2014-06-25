@@ -12,6 +12,7 @@ class Item(models.Model):
     image = models.URLField('Bild', blank=True)
     created = models.DateTimeField('Hinzugefügt', default=datetime.now())
     completed = models.BooleanField('Completed', default=False, blank=True)
+    searchIndex = models.IntegerField('Suchindex', default=0, blank=True)
 
     class Meta:
         ordering = ['-status','-created']
@@ -22,15 +23,26 @@ class Item(models.Model):
         return self.text
 
 
-    def createCopies(self, item=[]):
+    def createCopies(self, item={}):
         if not item:
             return
-        if item['author']:
-            self.author = item['author']
-        if item['name']:
-            self.name = item['name']
-        self.status = item['status']
-        self.image = item['image']
+
+        if isinstance(item, list):
+            item = item[self.searchIndex]
+            if item['item']['author']:
+                self.author = item['item']['author']
+            if item['item']['name']:
+                self.name = item['item']['name']
+            self.status = item['item']['status']
+            self.image = item['item']['image']
+            self.searchIndex = item['index']
+        else:
+            if item['author']:
+                self.author = item['author']
+            if item['name']:
+                self.name = item['name']
+            self.status = item['status']
+            self.image = item['image']
 
         existingCopies = Copy.objects.filter(item=self)
 
