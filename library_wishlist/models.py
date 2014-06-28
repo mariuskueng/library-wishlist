@@ -61,7 +61,16 @@ class Item(models.Model):
                         location = c['location']
                     )
                     copy.save()
+
+        self.setItemStatus()
+
         self.save()
+
+    def setItemStatus(self):
+        self.status = False
+        for c in self.copies.all():
+            if c.status == True:
+                self.status = True
 
     def updateCopies(self):
         item = search_catalog(self.text)
