@@ -26,7 +26,13 @@ class BranchView(TemplateView):
 
         context = super(BranchView, self).get_context_data(**kwargs)
         context['currentBranch'] = currentBranch
-        context['items'] = Item.objects.filter(completed=False, copies__branch=currentBranch, copies__status=True)
+        context['items'] = []
+
+        itemQuerySet = Item.objects.filter(completed=False, copies__branch=currentBranch, copies__status=True)
+        for item in itemQuerySet:
+            if item not in context['items']:
+                context['items'].append(item)
+
         context['branches'] = Branch.objects.all()
         return context
 
@@ -59,9 +65,12 @@ def createSearchResultItem(request):
 
             json_str = request.body.decode(encoding='UTF-8')
             searchItem = json.loads(json_str)
+            searchIndex = searchItem.get("index")
+            searchItem = searchItem.get("item")
 
             item = Item(
-                text=searchItem["name"]
+                text=searchItem.get("name"),
+                searchIndex=searchIndex
             )
             item.save()
             item.createCopies(searchItem)

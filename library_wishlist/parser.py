@@ -19,13 +19,24 @@ libraries = [
 
 
 def search_catalog(value):
+    # set encoding to utf-8
     value = value.encode("utf-8")
+
+    # clean up string
     re.compile('\W+', re.UNICODE).sub(' ', value).strip()
     query = {'': '"%s"' % value}
     value = urllib.urlencode(query)
+
+    # combine base_URL with search parameters and value
     url = '%s/InfoGuideClient.sisis/start.do?Login=opextern&Language=de&SearchType=2&Query=-1%s' % (base_URL, value)
+
+    # init mechanize browser
     br = mechanize.Browser()
+
+    # open url
     response = br.open(url)
+
+    # return parse_query response
     return parse_query(response, br)
 
 
@@ -81,58 +92,66 @@ def setItem(soup):
 
     for copy in copies_tags:
         if len(copy.select('td')) == 0: # if table row is no copy i.e "Neuerscheinungen"
-            break
+            continue
 
         branch = getLibrary(str(copy.select('td')[3].contents))
+
+        if not branch:
+            continue
+
         status = copy.select('td')[4].string
         location = BeautifulSoup(str(copy.select('td')[2])).get_text().strip()
 
-        if not branch:
-            break
 
-        if 'frei' in status:
-            status = True
-        elif 'ausleihbar' in status:
-            status = True
-        else:
-            status = False
-
-        if status == True:
-            item['status'] = status
 
         copies.append({
             'branch': branch,
-            'status': status,
-            'signatute': None,
+            'status': getStatus(status),
+            'signature': None,
             'location': location
         })
 
+        item['status'] = status
         item['copies'] = copies
 
     return item
 
 
 def getLibrary(branch):
+    # only return if branch of result is in libraries list
     for l in libraries:
         if l in branch:
             return l
 
 
 def getStatus(statusString):
-    pass
+    status = False
+    if "frei" in statusString:
+        status = True
+    elif "ausleihbar" in statusString:
+        status = True
+    return status
 
 
 def parse_query(query, browser):
+    # make a BeautifulSoup object from passed query
     soup = BeautifulSoup(query.read())
 
-    if (soup.select('#hitlist')): # if an artists list gets returned by query
+    # if a list of multiple search results gets returned by query
+    if (soup.select('#hitlist')):
+
+        # pass BeautifulSoup object and browser instance
         results = getMultipleSearchResults(soup, browser)
 
+        # create a new item for each result
         for r in results:
             r['item'] = setItem(r["content"])
+            # reset html content
             r['content'] = ""
 
         return results
 
+    # or a single search result
     else:
+        # create item from BeautifulSoup object
         return setItem(soup)

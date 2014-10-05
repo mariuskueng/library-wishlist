@@ -57,7 +57,7 @@ class Item(models.Model):
                     copy = Copy(
                         item = self,
                         branch = Branch.objects.get(name=c['branch']),
-                        status = c['status'],
+                        status = c.get('status'),
                         location = c['location']
                     )
                     copy.save()
@@ -73,8 +73,8 @@ class Item(models.Model):
                 self.status = True
 
     def updateCopies(self):
-        item = search_catalog(self.text)
-        self.createCopies(item)
+        catalogItem = search_catalog(self.text)
+        self.createCopies(catalogItem)
         self.save()
 
 

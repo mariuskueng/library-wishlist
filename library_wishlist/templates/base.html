@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
     <head>
-        <title>Library Wishlist</title>
+        <title>GGG Wunschliste</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="robots" content"noindex, nofollow">
         <!-- Bootstrap -->
@@ -22,26 +22,18 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">GGG</a>
+                <a class="navbar-brand" href="/">GGG Wunschliste</a>
               </div>
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                  <li><a href="#" class="wishlist-collapse-all">Zeige alle</a></li>
-                  <li><a href="/">Alle</a></li>
+                  <li><a href="#" class="wishlist-collapse-all">Alle Medien aufklappen</a></li>
+                  <li><a href="/">Alle Zweigstellen</a></li>
                       {% for b in branches %}
-                        <li>
+                        <li class="{% if currentBranch.name == b.name %} active {% endif %}">
                             <a href="/branches/{{ b.slug }}">{{ b.name }}</a>
-                            {% if currentBranch.name  == b.name %}
-                            <ul class="opening-hours">
-                                <li>
-                                    {{ currentBranch.opening_hours }}
-                                </li>
-                            </ul>
-                            {% endif %}
                         </li>
                       {% endfor %}
-
                 </ul>
               </div><!-- /.navbar-collapse -->
             </div>
@@ -50,13 +42,23 @@
         <div class="container">
             <div class="col-xs-12">
                 <div class="row">
+                    {% if currentBranch %}
+                    <div class="opening-hours">
+                        {% for b in branches %}
+                            {% if currentBranch.name  == b.name %}
+                            <h4>Öffnungszeiten {{ currentBranch.name }}</h4>
+                            <p>{{ currentBranch.opening_hours }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <form id="create-form" role="form" action="" method="post" class="form-inline">{% csrf_token %}
                       <div class="form-group">
                         <input type="text" class="form-control" id="id_text" name="text" placeholder="Titel hier eingeben">
                         <button type="submit" class="btn btn-default wishlist-submit">Hinzufügen</button>
                       </div>
                     </form>
-                    <div class="suggestions"></div>
+                    <div class="search-results"></div>
                 </div>
                 <div class="row">
                     {% block content %}{% endblock content %}

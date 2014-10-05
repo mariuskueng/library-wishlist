@@ -1,4 +1,11 @@
 # mechanize Browser
+import re
+import urllib2
+import urllib
+from bs4 import BeautifulSoup
+import mechanize
+
+base_URL = 'http://stadtbibliothekbasel.ch:8080'
 
 # search value
 value = 'Arbeit und Struktur'
@@ -42,3 +49,4 @@ for r in soup.select('.data .t1'):
     })
 
 print results
+print len(results)

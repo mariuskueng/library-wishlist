@@ -23,8 +23,8 @@ $("#create-form").submit(function() {
     var textField = $('#id_text');
     var submitButton = $('.wishlist-submit');
 
-    submitButton.button('loading');
     if (textField.val() == '') return false;
+    else submitButton.button('loading');
 
     $.post("/item/", {
             text: textField.val(),
@@ -32,7 +32,7 @@ $("#create-form").submit(function() {
         },
         function(data, status) {
             if (typeof data === "object") {
-                initSuggestions(data);
+                initSearchResults(data);
             } else {
                 $('.items').first().before(data);
             }
@@ -66,17 +66,17 @@ function resetItemForm() {
     });
 }
 
-function initSuggestions(data) {
+function initSearchResults(data) {
     searchResults = [];
-    $(".suggestions").empty().append("<p><strong>Es wurden mehrere Suchergebnisse gefunden. Bitte das Gewünschte auswählen.</strong></p>");
+    $(".search-results").empty().append("<p><strong>Es wurden mehrere Suchergebnisse gefunden. Bitte das Gewünschte auswählen.</strong></p>");
     for (var i = 0; i < data.length; i++) {
-        $(".suggestions").append("<p><a href='#' data-index='" + i + "'>" + data[i].name + "</a></p>");
+        $(".search-results").append("<p><a href='#' data-index='" + i + "'>" + data[i].name + "</a></p>");
         searchResults.push(data[i]);
     }
-    $(".suggestions a").on("click", function(e) {
+    $(".search-results a").on("click", function(e) {
         e.preventDefault();
         var index = parseInt($(this).attr("data-index"));
-        var item = JSON.stringify(searchResults[index].item);
+        var item = JSON.stringify(searchResults[index]);
 
         $.ajax({
             type: "POST",
@@ -87,7 +87,7 @@ function initSuggestions(data) {
             success: function(data, status) {
                 $('.items').first().before(data);
                 resetItemForm();
-                $(".suggestions").empty();
+                $(".search-results").empty();
             },
             error: function(xhr, status) {
                 console.log("Error: " + xhr.statusText);
