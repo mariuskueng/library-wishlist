@@ -59,9 +59,12 @@ def createSearchResultItem(request):
 
             json_str = request.body.decode(encoding='UTF-8')
             searchItem = json.loads(json_str)
+            searchIndex = searchItem.get("index")
+            searchItem = searchItem.get("item")
 
             item = Item(
-                text=searchItem["name"]
+                text=searchItem.get("name"),
+                searchIndex=searchIndex
             )
             item.save()
             item.createCopies(searchItem)

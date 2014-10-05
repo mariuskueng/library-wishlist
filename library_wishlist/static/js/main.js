@@ -76,7 +76,7 @@ function initSuggestions(data) {
     $(".suggestions a").on("click", function(e) {
         e.preventDefault();
         var index = parseInt($(this).attr("data-index"));
-        var item = JSON.stringify(searchResults[index].item);
+        var item = JSON.stringify(searchResults[index]);
 
         $.ajax({
             type: "POST",

@@ -92,24 +92,26 @@ def setItem(soup):
 
     for copy in copies_tags:
         if len(copy.select('td')) == 0: # if table row is no copy i.e "Neuerscheinungen"
-            break
+            continue
 
         branch = getLibrary(str(copy.select('td')[3].contents))
+
+        if not branch:
+            continue
+
         status = copy.select('td')[4].string
         location = BeautifulSoup(str(copy.select('td')[2])).get_text().strip()
 
-        if not branch:
-            break
 
-        item['status'] = getStatus(status)
 
         copies.append({
             'branch': branch,
-            '': status,
+            'status': getStatus(status),
             'signature': None,
             'location': location
         })
 
+        item['status'] = status
         item['copies'] = copies
 
     return item
@@ -124,7 +126,9 @@ def getLibrary(branch):
 
 def getStatus(statusString):
     status = False
-    if 'frei' or 'ausleihbar' in statusString:
+    if "frei" in statusString:
+        status = True
+    elif "ausleihbar" in statusString:
         status = True
     return status
 
