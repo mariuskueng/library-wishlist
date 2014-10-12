@@ -99,14 +99,12 @@ def setItem(soup):
         if not branch:
             continue
 
-        status = copy.select('td')[4].string
+        status = getStatus(copy.select('td')[4].string)
         location = BeautifulSoup(str(copy.select('td')[2])).get_text().strip()
-
-
 
         copies.append({
             'branch': branch,
-            'status': getStatus(status),
+            'status': status,
             'signature': None,
             'location': location
         })

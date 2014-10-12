@@ -84,6 +84,7 @@ class Copy(models.Model):
     status = models.BooleanField('Status', default=False)
     location = models.CharField('Standort', max_length=200, blank=True)
     # signature = models.CharField('Zweigstelle', max_length=200)
+    # return_date = models.DateTimeField(u'Rückgabedatum', null=True, blank=True)
 
 
     def __unicode__(self):
