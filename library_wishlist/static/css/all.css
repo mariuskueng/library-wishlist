@@ -17,7 +17,7 @@
     margin-top: 20px;
 }
 .copies-info {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 .copies-info .btn {
     font-size: 5px;
@@ -28,6 +28,7 @@
 .wishlist-location {
     color: #777;
     font-style: italic;
+    display: block;
 }
 .opening-hours {
     margin-bottom: 40px;
@@ -63,6 +64,7 @@
     .copies-info {
         width: 100%;
         margin: 0;
+        margin-bottom: 15px
     }
 
     .copies-info .col-xs-4 {

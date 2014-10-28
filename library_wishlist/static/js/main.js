@@ -9,21 +9,21 @@ $('.wishlist-dropdown').on('click', function(e) {
     $(this).parent().siblings('.copies').collapse('toggle');
     $(this).children('.glyphicon')
         .toggleClass('glyphicon-chevron-down')
-        .toggleClass('glyphicon-chevron-up')
+        .toggleClass('glyphicon-chevron-up');
 });
 $('.wishlist-collapse-all').on('click', function(e){
     e.preventDefault();
     $('.copies').collapse('show');
     $('.wishlist-dropdown').find('.glyphicon')
         .toggleClass('glyphicon-chevron-down')
-        .toggleClass('glyphicon-chevron-up')
+        .toggleClass('glyphicon-chevron-up');
 });
 
 $("#create-form").submit(function() {
     var textField = $('#id_text');
     var submitButton = $('.wishlist-submit');
 
-    if (textField.val() == '') return false;
+    if (textField.val() === '') return false;
     else submitButton.button('loading');
 
     $.post("/item/", {
@@ -45,8 +45,9 @@ $("#create-form").submit(function() {
         })
         .fail(function(xhr) {
             console.log("Error: " + xhr.statusText);
+            $(".search-results").empty().append("Kein Treffer unter <strong>\"" + textField.val() + "\"</strong> im GGG Katalog gefunden.");
             resetItemForm();
-        })
+        });
     return false;
 });
 
@@ -55,14 +56,14 @@ function resetItemForm() {
     var submitButton = $('.wishlist-submit');
 
     submitButton.button('reset');
-    textField.val('')
+    textField.val('');
 
     $('.wishlist-dropdown').on('click', function(e) {
         e.preventDefault();
         $(this).parent().siblings('.copies').collapse('toggle');
         $(this).children('.glyphicon')
             .toggleClass('glyphicon-chevron-down')
-            .toggleClass('glyphicon-chevron-up')
+            .toggleClass('glyphicon-chevron-up');
     });
 }
 
@@ -100,7 +101,6 @@ function initSearchResults(data) {
 }
 
 function completeItem(element) {
-    var element = element;
     var id = element.data('id');
     $.post("/item/" + id + '/', {
             itemId: id,
@@ -116,7 +116,7 @@ function completeItem(element) {
         .success(function(xhr) {
             $('#item-' + id).fadeOut(function() {
                 element.remove();
-            })
+            });
         });
     return false;
 }
@@ -126,7 +126,7 @@ function completeItem(element) {
 // using jQuery
 function getCookie(name) {
     var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
+    if (document.cookie && document.cookie !== '') {
         var cookies = document.cookie.split(';');
         for (var i = 0; i < cookies.length; i++) {
             var cookie = jQuery.trim(cookies[i]);

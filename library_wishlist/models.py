@@ -1,6 +1,6 @@
 # coding=utf-8
 from django.db import models
-from datetime import datetime
+from django.utils.timezone import now
 from parser import search_catalog
 
 
@@ -10,7 +10,7 @@ class Item(models.Model):
     author = models.CharField('Autor', max_length=200, blank=True)
     status = models.BooleanField('Status', default=False, blank=True)
     image = models.URLField('Bild', blank=True)
-    created = models.DateTimeField('Hinzugefügt', default=datetime.now())
+    created = models.DateTimeField('Hinzugefügt', blank=True, default=now())
     completed = models.BooleanField('Completed', default=False, blank=True)
     searchIndex = models.IntegerField('Suchindex', default=0, blank=True)
 
@@ -84,6 +84,7 @@ class Copy(models.Model):
     status = models.BooleanField('Status', default=False)
     location = models.CharField('Standort', max_length=200, blank=True)
     # signature = models.CharField('Zweigstelle', max_length=200)
+    # return_date = models.DateTimeField(u'Rückgabedatum', null=True, blank=True)
 
 
     def __unicode__(self):

@@ -20,7 +20,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'Item.created'
         db.add_column(u'library_wishlist_item', 'created',
-                      self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2014, 2, 11, 0, 0)),
+                      self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True),
                       keep_default=False)
 
 
