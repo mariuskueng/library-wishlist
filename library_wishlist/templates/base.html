@@ -10,6 +10,7 @@
         <link href="{{STATIC_URL}}css/all.css" rel="stylesheet" media="screen">
         <script type="text/javascript">
           var csrf = '{{csrf_token}}';
+          var user_id = parseInt('{{ user_id }}') ||  null;
         </script>
     </head>
     <body>
@@ -27,14 +28,24 @@
               </div>
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                  <li><a href="#" class="wishlist-collapse-all">Alle Medien aufklappen</a></li>
-                  <li><a href="/">Alle Zweigstellen</a></li>
-                      {% for b in branches %}
-                        <li class="{% if currentBranch.name == b.name %} active {% endif %}">
-                            <a href="/branches/{{ b.slug }}">{{ b.name }}</a>
-                        </li>
-                      {% endfor %}
+                {% if username %}
+                  <ul class="nav navbar-nav">
+                    <li><a href="#" class="wishlist-collapse-all">Alle Medien aufklappen</a></li>
+                    <li><a href="/">Alle Zweigstellen</a></li>
+                        {% for b in branches %}
+                          <li class="{% if currentBranch.name == b.name %} active {% endif %}">
+                              <a href="/branches/{{ b.slug }}">{{ b.name }}</a>
+                          </li>
+                        {% endfor %}
+                  </ul>
+                {% endif %}
+                <ul class="nav navbar-nav pull-right">
+                  {% if username %}
+                    <li><a href="{% url 'logout_view' %}?next={{request.path}}"><strong>{{ username }}</strong> Logout</a></li>
+                  {% else %}
+                    <li><a href="{% url 'login_view' %}?next={{request.path}}">Login</a></li>
+                    <li><a href="{% url 'registration_view' %}?next={{request.path}}">Account erstellen</a></li>
+                  {% endif %}
                 </ul>
               </div><!-- /.navbar-collapse -->
             </div>
@@ -42,6 +53,7 @@
 
         <div class="container">
             <div class="col-xs-12">
+              {% if username %}
                 <div class="row">
                     {% if currentBranch %}
                     <div class="opening-hours">
@@ -61,6 +73,7 @@
                     </form>
                     <div class="search-results"></div>
                 </div>
+              {% endif %}
                 <div class="row">
                     {% block content %}{% endblock content %}
                 </div>

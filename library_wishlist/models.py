@@ -1,10 +1,12 @@
 # coding=utf-8
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils.timezone import now
 from parser import search_catalog
 
 
 class Item(models.Model):
+    user = models.ForeignKey(User, null=True)
     text = models.CharField('Text', max_length=200)
     name = models.CharField('Name', max_length=200, blank=True)
     author = models.CharField('Autor', max_length=200, blank=True)

@@ -26,6 +26,7 @@ $("#create-form").submit(function() {
 
     $.post("/item/", {
             text: textField.val(),
+            user_id: user_id,
             csrfmiddlewaretoken: csrf
         },
         function(data, status) {
