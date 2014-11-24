@@ -5,6 +5,19 @@ from models import Item, Copy, Branch
 from django.db.models.base import ObjectDoesNotExist
 
 class ItemTestCase(TestCase):
+    '''
+        Test Todos:
+        - delete item, branch, copy
+        - test valid item date
+        - test create copies (single and list)
+        - test Copy model with item
+        - test item lists
+        - test valid searchIndex with new catalog search
+        - test views...
+        - test User
+        - test multiple search results
+    '''
+
     testItemSingle = None
     testItemMultiple = None
     testBranch = None
@@ -16,12 +29,15 @@ class ItemTestCase(TestCase):
         self.testBranch = Branch.objects.create(name="Kirschgarten")
 
         # saving the searchitem to reduce latency
-        self.search_item = search_catalog(self.testItemSingle.text)
+        self.search_item = search_catalog(self.testItemSingle.text, 'single')
         self.testItemSingle.createCopies(self.search_item)
 
         # define fixtures states
         # - amount of copies
         # - copies statuses
+
+    def tearDown(self):
+        self.search_item = None
 
     def test_item_has_text(self):
         self.assertEqual(self.testItemSingle.text, "Bombay Bicycle Club")
@@ -34,6 +50,8 @@ class ItemTestCase(TestCase):
 
     def test_item_search_catalog_with_invalid_text(self):
         text="Bombays Bicycle Clubb" # with typos
+
+        # needs mocking to return a 404 in a offline env
         self.search_item = search_catalog(text)
 
         self.assertEqual(self.search_item, [])
@@ -48,6 +66,7 @@ class ItemTestCase(TestCase):
     def test_delete_item(self):
         testItemSingle = Item.objects.create(text="Bombay Bicycle Club")
         testItemSingle.delete()
+
         try:
             Item.objects.get(id=testItemSingle.id)
         except ObjectDoesNotExist, e:
@@ -76,16 +95,3 @@ class ItemTestCase(TestCase):
 
     def test_item_search_index(self):
         pass
-
-
-    '''
-        # Test Todos:
-        - delete item, branch, copy
-        - test valid item date
-        - test create copies (single and list)
-        - test Copy model with item
-        - test item lists
-        - test valid searchIndex with new catalog search
-        - test views...
-        - test User
-    '''
