@@ -6,9 +6,6 @@ import mechanize
 
 base_URL = 'http://stadtbibliothekbasel.ch:8080'
 
-# TODO: check if django is around,
-# if yes use db models
-
 libraries = [
     'Zentrum',
     'Kirschgarten',
@@ -17,8 +14,18 @@ libraries = [
     'Basel West',
 ]
 
+def search_catalog(value, local=None):
+    '''
+        @param value: string, search value
+        @param local: string, 'single' or 'multiple' to determine if the search
+                        term returns a single or multiple search results
+    '''
+    if local:
+        if 'single' in local:
+            return parse_query('library_wishlist/fixtures/singleItem/singleItem.html')
+        elif 'multiple' in local:
+            return parse_query('fixtures/multipleItems/searchResult.html')
 
-def search_catalog(value):
     # set encoding to utf-8
     value = value.encode("utf-8")
 
@@ -38,6 +45,34 @@ def search_catalog(value):
 
     # return parse_query response
     return parse_query(response, br)
+
+
+def parse_query(query, browser=None):
+    if browser:
+        # make a BeautifulSoup object from passed query
+        soup = BeautifulSoup(query.read())
+    else:
+        # in a testing env it reads from a local file
+        soup = BeautifulSoup(open(query))
+
+    # if a list of multiple search results gets returned by query
+    if (soup.select('#hitlist')):
+
+        # pass BeautifulSoup object and browser instance
+        results = getMultipleSearchResults(soup, browser)
+
+        # create a new item for each result
+        for r in results:
+            r['item'] = setItem(r["content"])
+            # reset html content
+            r['content'] = ""
+
+        return results
+
+    # or a single search result
+    else:
+        # create item from BeautifulSoup object
+        return setItem(soup)
 
 
 def getMultipleSearchResults(soup, browser):
@@ -129,27 +164,3 @@ def getStatus(statusString):
     elif "ausleihbar" in statusString:
         status = True
     return status
-
-
-def parse_query(query, browser):
-    # make a BeautifulSoup object from passed query
-    soup = BeautifulSoup(query.read())
-
-    # if a list of multiple search results gets returned by query
-    if (soup.select('#hitlist')):
-
-        # pass BeautifulSoup object and browser instance
-        results = getMultipleSearchResults(soup, browser)
-
-        # create a new item for each result
-        for r in results:
-            r['item'] = setItem(r["content"])
-            # reset html content
-            r['content'] = ""
-
-        return results
-
-    # or a single search result
-    else:
-        # create item from BeautifulSoup object
-        return setItem(soup)
