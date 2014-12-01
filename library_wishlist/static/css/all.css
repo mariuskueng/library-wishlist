@@ -37,6 +37,10 @@
     margin-top: 20px;
 }
 
+.center-block {
+    float: none;
+}
+
 @media(max-width:767px){
 
     #id_text {

@@ -37,7 +37,13 @@ class BranchView(TemplateView):
             context['username'] = self.request.user.username
             context['items'] = []
 
-            itemQuerySet = Item.objects.filter(completed=False, copies__branch=currentBranch, copies__status=True)
+            itemQuerySet = Item.objects.filter(
+                                completed=False,
+                                copies__branch=currentBranch,
+                                copies__status=True,
+                                user=self.request.user
+                            )
+            # show items only once which are in more than one branch
             for item in itemQuerySet:
                 if item not in context['items']:
                     context['items'].append(item)

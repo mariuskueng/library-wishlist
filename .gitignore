@@ -3,7 +3,7 @@
 /media
 /static
 /webstats
-.coverag
+/htmlcov
 .coverage
 *.pyc
 *.sqlite
