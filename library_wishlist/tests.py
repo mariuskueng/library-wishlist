@@ -29,7 +29,7 @@ class ItemTestCase(TestCase):
         self.testBranch = Branch.objects.create(name="Kirschgarten")
 
         # saving the searchitem to reduce latency
-        self.search_item = search_catalog(self.testItemSingle.text, 'single')
+        self.search_item = search_catalog(self.testItemSingle.text)
         self.testItemSingle.createCopies(self.search_item)
 
         # define fixtures states

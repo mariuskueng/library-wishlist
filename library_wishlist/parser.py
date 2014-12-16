@@ -14,17 +14,13 @@ libraries = [
     'Basel West',
 ]
 
-def search_catalog(value, local=None):
+
+def search_catalog(value):
     '''
         @param value: string, search value
         @param local: string, 'single' or 'multiple' to determine if the search
                         term returns a single or multiple search results
     '''
-    if local:
-        if 'single' in local:
-            return parse_query('library_wishlist/fixtures/singleItem/singleItem.html')
-        elif 'multiple' in local:
-            return parse_query('fixtures/multipleItems/searchResult.html')
 
     # set encoding to utf-8
     value = value.encode("utf-8")
@@ -47,13 +43,9 @@ def search_catalog(value, local=None):
     return parse_query(response, br)
 
 
-def parse_query(query, browser=None):
-    if browser:
-        # make a BeautifulSoup object from passed query
-        soup = BeautifulSoup(query.read())
-    else:
-        # in a testing env it reads from a local file
-        soup = BeautifulSoup(open(query))
+def parse_query(query, browser):
+    # make a BeautifulSoup object from passed query
+    soup = BeautifulSoup(query.read())
 
     # if a list of multiple search results gets returned by query
     if (soup.select('#hitlist')):
