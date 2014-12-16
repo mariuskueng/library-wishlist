@@ -1,10 +1,9 @@
 import re
-import urllib2
 import urllib
 from bs4 import BeautifulSoup
 import mechanize
 
-base_URL = 'http://stadtbibliothekbasel.ch:8080'
+base_URL = 'http://katalog.stadtbibliothekbasel.ch/'
 
 libraries = [
     'Zentrum',
@@ -31,7 +30,7 @@ def search_catalog(value):
     value = urllib.urlencode(query)
 
     # combine base_URL with search parameters and value
-    url = '%s/InfoGuideClient.sisis/start.do?Login=opextern&Language=de&SearchType=2&Query=-1%s' % (base_URL, value)
+    url = '%sggg/webopac/direct.aspx?SearchField=W&view=SHORT&SearchTerm=%s' % (base_URL, value)
 
     # init mechanize browser
     br = mechanize.Browser()
@@ -95,44 +94,69 @@ def getMultipleSearchResults(soup, browser):
 
 
 def setItem(soup):
-    if len(soup.select('.left')) == 0: # if item is not available in library return
+    if len(soup.select('ul')) == 5:  # if item is not available in library return
         return None
 
-    copies_tags = soup.select('#tab-content tr')
-    del copies_tags[0]
-
-    copies = []
-
-    image = BeautifulSoup(str(soup.select('.box-container img'))).find('img')
+    image = soup.select('.coverimg')
     if image:
-        image = image['src']
+        image = image[0]['src']
     else:
         image = ''
 
+    author = soup.select('.menu')[1]
+    author_text = ''
+
+    if len(author.select('span')) > 0:
+        for s in author:
+            author_text += str(s.string)
+    else:
+        author = author.string
+
+    if author_text:
+        author = author_text
+
     item = {
-        'name': soup.select('.box-container td strong')[0].string.split(' [')[0],
-        'author': soup.select('.box-container td a')[0].string,
+        'name': soup.select('#marc_title')[0].string,
+        'author': author,
         'copies': [],
         'status': False,
         'image': image
     }
 
-    for copy in copies_tags:
-        if len(copy.select('td')) == 0: # if table row is no copy i.e "Neuerscheinungen"
-            continue
+    copies = []
+    copies_tags = soup.select('#tblItems tr')  # bs tags
 
-        branch = getLibrary(str(copy.select('td')[3].contents))
+    if soup.select('.extdatagrid_navig'): # if single copy there's an extra row
+        del copies_tags[0]
+
+    del copies_tags[0]
+
+    for copy in copies_tags:
+
+        branch = ''
+        status = ''
+        location = ''
+        signature = ''
+
+        for i in range(1, 3):
+            if not branch:
+                branch = getLibrary(copy.select('td')[i].string)
 
         if not branch:
             continue
 
-        status = getStatus(copy.select('td')[4].string)
-        location = BeautifulSoup(str(copy.select('td')[2])).get_text().strip()
+        for i in range(2, 4):
+            if not status:
+                status = getStatus(copy.select('td')[i + 2].string)
+            if not location:
+                location = BeautifulSoup(copy.select('td')[i].string)
+            if not signature:
+                signature = BeautifulSoup(copy.select('td')[i + 1].string)
 
         copies.append({
             'branch': branch,
             'status': status,
-            'signature': None,
+            'signature': signature,
             'location': location
         })
 
