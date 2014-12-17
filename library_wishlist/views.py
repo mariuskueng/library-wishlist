@@ -62,9 +62,7 @@ def createItem(request):
             user_id = int(request.POST['user_id'])
 
             if searchItem:
-
-                for item in searchItem:
-                    item['user_id'] = user_id
+                searchItem['user_id'] = user_id
 
                 if isinstance(searchItem, list):
                     return HttpResponse(json.dumps(searchItem), content_type="application/json")

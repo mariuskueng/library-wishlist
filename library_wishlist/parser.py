@@ -140,18 +140,18 @@ def setItem(soup):
 
         for i in range(1, 3):
             if not branch:
-                branch = getLibrary(copy.select('td')[i].string)
+                branch = getLibrary(str(copy.select('td')[i].string))
 
         if not branch:
             continue
 
-        for i in range(2, 4):
+        for i in range(1, 3):
             if not status:
-                status = getStatus(copy.select('td')[i + 2].string)
+                status = getStatus(str(copy.select('td')[i + 3].string))
             if not location:
-                location = BeautifulSoup(copy.select('td')[i].string)
+                location = BeautifulSoup(copy.select('td')[i + 2].string)
             if not signature:
-                signature = BeautifulSoup(copy.select('td')[i + 1].string)
+                signature = BeautifulSoup(copy.select('td')[i + 3].string)
 
         copies.append({
             'branch': branch,
@@ -174,9 +174,11 @@ def getLibrary(branch):
 
 
 def getStatus(statusString):
-    status = False
+    status = None
     if "frei" in statusString:
         status = True
     elif "ausleihbar" in statusString:
         status = True
+    elif "checked out" in statusString:
+        status = False
     return status
